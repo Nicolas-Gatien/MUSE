@@ -6,6 +6,16 @@ import pywhatkit
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from commands.archive_email import CommandArchiveEmail
+from commands.get_current_weather import CommandGetCurrentWeather
+from commands.get_emails import CommandGetEmails
+from commands.open_email import CommandOpenEmail
+from commands.play_youtube_video import CommandPlayYoutubeVideo
+
 class ChatBot:
     def __init__(self, keys_file):
         with open(keys_file) as f:
@@ -28,177 +38,23 @@ class ChatBot:
                             Limit all of your responses to a maximum of 15 words.
                             """
                         }]
-
-    def get_current_weather(self, location, unit="fahrenheit"):
-        """Get the current weather in a given location"""
-        weather_info = {
-            "location": location,
-            "temperature": "72",
-            "unit": unit,
-            "forecast": ["sunny", "windy"],
-        }
-        return json.dumps(weather_info)
-
-    def play_youtube_video(self, video_name):
-        """Opens a new tab in the default browser and plays a YouTube video."""
-        pywhatkit.playonyt(video_name)
-        return f"You have successfully started playing {video_name} on Youtube"
-    
-    def get_emails(self, num_emails):
-        """Get the subjects of the num_emails most recent emails in the primary inbox."""
-        creds = Credentials.from_authorized_user_info({
-            "client_id": self.gmail_client_id,
-            "client_secret": self.gmail_client_secret,
-            "refresh_token": self.gmail_refresh_token
-        })
-
-        service = build('gmail', 'v1', credentials=creds)
-
-        # Call the Gmail API to get messages from primary inbox
-        results = service.users().messages().list(userId='me', q="in:inbox AND category:primary", maxResults=num_emails).execute()
-        messages = results.get('messages', [])
-
-        email_subjects = []
-        if not messages:
-            email_subjects.append('No new messages.')
-        else:
-            for message in messages:
-                msg = service.users().messages().get(userId='me', id=message['id']).execute()
-                payload = msg['payload']
-                headers = payload['headers']
-                
-                for header in headers:
-                    if header['name'] == 'Subject':
-                        email_subjects.append(header['value'])
-
-        # join the subjects into a single string
-        return '\n'.join(email_subjects)
-
-    def open_email(self, subject):
-        """Open an email based on its subject."""
-        creds = Credentials.from_authorized_user_info({
-            "client_id": self.gmail_client_id,
-            "client_secret": self.gmail_client_secret,
-            "refresh_token": self.gmail_refresh_token
-        })
-
-        service = build('gmail', 'v1', credentials=creds)
-
-        results = service.users().messages().list(userId='me', q=f"subject:{subject}").execute()
-        messages = results.get('messages', [])
         
-        if messages:
-            # Open the first email that matches the subject
-            message = service.users().messages().get(userId='me', id=messages[0]['id']).execute()
-            return f"Opened email: {message['snippet']}"
-        else:
-            return f"No emails found with subject: {subject}"
-
-    def archive_email(self, subject):
-        """Archive an email based on its subject."""
-        creds = Credentials.from_authorized_user_info({
-            "client_id": self.gmail_client_id,
-            "client_secret": self.gmail_client_secret,
-            "refresh_token": self.gmail_refresh_token
-        })
-
-        service = build('gmail', 'v1', credentials=creds)
-
-        results = service.users().messages().list(userId='me', q=f"subject:{subject}").execute()
-        messages = results.get('messages', [])
-        
-        # Check if messages list is empty
-        if not messages:
-            return f"No emails found with subject: {subject}"
-
-        # Archive the first email that matches the subject
-        message = service.users().messages().modify(userId='me', id=messages[0]['id'], body={'removeLabelIds': ['INBOX']}).execute()
-        return f"Archived email with subject: {subject}"
-
-    def add_dynamic_function(self, function_code: str, function_name: str):
-        global_namespace = globals()
-        exec(function_code, global_namespace)
-        function = global_namespace.get(function_name)
-        if not function or not callable(function):
-            raise ValueError(f"Function '{function_name}' was not correctly defined.")
-        setattr(self, function_name, function)
+        self.command_open_email = CommandOpenEmail()
+        self.command_archive_email = CommandArchiveEmail()
+        self.command_get_current_weather = CommandGetCurrentWeather()
+        self.command_get_emails = CommandGetEmails()
+        self.command_play_youtube_video = CommandPlayYoutubeVideo()
 
     def get_response(self, prompt):
         # Add user's prompt to messages
         self.messages.append({"role": "user", "content": prompt})
 
         functions = [
-            {
-                "name": "get_current_weather",
-                "description": "Get the current weather in a given location",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "location": {
-                            "type": "string",
-                            "description": "The city and state, e.g. San Francisco, CA",
-                        },
-                        "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
-                    },
-                    "required": ["location"],
-                },
-            },
-            {
-                "name": "play_youtube_video",
-                "description": "Play a YouTube video",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "video_name": {
-                            "type": "string",
-                            "description": "The name of the video to play on YouTube",
-                        },
-                    },
-                    "required": ["video_name"],
-                },
-            },
-            {
-                "name": "get_emails",
-                "description": "Get all emails from the inbox",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "num_emails": {
-                            "type": "integer",
-                            "description": "The number of emails to fetch (default to 10)"
-                        },
-                    },
-                    "required": ["num_emails"],
-                },
-            },
-            {
-                "name": "open_email",
-                "description": "Open an email based on its subject",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "subject": {
-                            "type": "string",
-                            "description": "The specific subject of the email to be opened (use the full subject)"
-                        }
-                    },
-                    "required": ["subject"]
-                }
-            },
-            {
-                "name": "archive_email",
-                "description": "Archive an email based on its subject",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "subject": {
-                            "type": "string",
-                            "description": "The specific subject of the email to be archived (use the full subject)"
-                        }
-                    },
-                    "required": ["subject"]
-                }
-            }
+            self.command_open_email.metadata,
+            self.command_archive_email.metadata,
+            self.command_get_current_weather.metadata,
+            self.command_get_emails.metadata,
+            self.command_play_youtube_video.metadata
         ]
 
         while True:
@@ -213,11 +69,11 @@ class ChatBot:
 
             if response_message.get("function_call"):
                 available_functions = {
-                    "get_current_weather": self.get_current_weather,
-                    "play_youtube_video": self.play_youtube_video,
-                    "get_emails": self.get_emails,
-                    "open_email": self.open_email,
-                    "archive_email": self.archive_email,
+                    self.command_open_email.name: self.command_open_email.execute(),
+                    self.command_archive_email.name: self.command_archive_email.execute(),
+                    self.command_get_current_weather.name: self.command_get_current_weather.execute(),
+                    self.command_get_emails.name: self.command_get_emails.execute(),
+                    self.command_play_youtube_video.name: self.command_play_youtube_video.execute(),
                 }
                 function_name = response_message["function_call"]["name"]
                 function_to_call = available_functions.get(function_name)

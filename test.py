@@ -1,4 +1,4 @@
-from chatbot import ChatBot
+from chatbot.chatbot import ChatBot
 
 bot = ChatBot(keys_file="api_keys.json")
 bot.add_dynamic_function("""

@@ -6,7 +6,7 @@ from datetime import datetime
 
 import json
 
-with open("config/api_keys.json") as f:
+with open("config\\api_keys.json") as f:
     keys = json.load(f)
 
 openai_api_key = keys["openai"]
@@ -28,7 +28,7 @@ def listen():
         except:
             return ""
 
-bot = ChatBot("config/api_keys.json")
+bot = ChatBot("config\\api_keys.json")
 
 while True:
     user_input = listen()
