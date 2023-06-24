@@ -6,8 +6,7 @@ from .base_command import BaseCommand
 class CommandOpenEmail(BaseCommand):
     def __init__(self):
         self.name = "open_email"
-        self.metadata = [
-            {
+        self.metadata = {
                 "name": f"{self.name}",
                 "description": "Open an email based on its subject",
                 "parameters": {
@@ -21,7 +20,7 @@ class CommandOpenEmail(BaseCommand):
                     "required": ["subject"]
                 }
             }
-        ]
+        
         super().__init__(f"{self.name}", self.metadata)
     
     def execute(self, subject):

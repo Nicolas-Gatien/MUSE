@@ -5,8 +5,7 @@ from .base_command import BaseCommand
 class CommandGetEmails(BaseCommand):
     def __init__(self):
         self.name = "get_emails"
-        self.metadata = [
-            {
+        self.metadata = {
                 "name": f"{self.name}",
                 "description": "Get all emails from the inbox",
                 "parameters": {
@@ -20,7 +19,6 @@ class CommandGetEmails(BaseCommand):
                     "required": ["num_emails"],
                 },
             }
-        ]
         super().__init__(f"{self.name}", self.metadata)
 
     def execute(self, num_emails):

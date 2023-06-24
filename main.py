@@ -1,10 +1,12 @@
-# main.py
 import speech_recognition as sr
 import pyttsx3
 from chatbot.chatbot import ChatBot
 from datetime import datetime
 
 import json
+from colorama import init, Fore, Style
+
+init()
 
 with open("config\\api_keys.json") as f:
     keys = json.load(f)
@@ -21,6 +23,7 @@ def listen():
     """Listen to user's voice input"""
     r = sr.Recognizer()
     with sr.Microphone() as source:
+        print(Fore.LIGHTBLACK_EX + "Listening..." + Style.RESET_ALL)
         audio = r.listen(source)
         try:
             text = r.recognize_google(audio)
@@ -36,8 +39,8 @@ while True:
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 
     if user_input:
-        prompt =f"""{user_input}"""
-        print("User: ", prompt)
+        prompt = f"{user_input}"
+        print(Fore.WHITE + "User: " + prompt)
         response = bot.get_response(prompt)
-        print("Bot: ", response)
+        print(Fore.YELLOW + "Bot: " + response)
         speak(response)

@@ -5,8 +5,7 @@ from .base_command import BaseCommand
 class CommandArchiveEmail(BaseCommand):
     def __init__(self):
         self.name = "archive_email"
-        self.metadata = [
-            {
+        self.metadata = {
                 "name": f"{self.name}",
                 "description": "Archive an email based on its subject",
                 "parameters": {
@@ -20,7 +19,7 @@ class CommandArchiveEmail(BaseCommand):
                     "required": ["subject"]
                 }
             }
-        ]
+        
         super().__init__(f"{self.name}", self.metadata)
 
     def execute(self, subject):

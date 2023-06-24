@@ -1,4 +1,3 @@
-# chatbot.py
 import openai
 import json
 
@@ -15,6 +14,10 @@ from commands.get_current_weather import CommandGetCurrentWeather
 from commands.get_emails import CommandGetEmails
 from commands.open_email import CommandOpenEmail
 from commands.play_youtube_video import CommandPlayYoutubeVideo
+
+from colorama import init, Fore, Style
+
+init()
 
 class ChatBot:
     def __init__(self, keys_file):
@@ -35,7 +38,6 @@ class ChatBot:
                             Your goal is to learn as many skills as you possibly can and to be as helpful as possible.
                             If there is a skill that would be useful for you to know, that you do not currently have access to, ask Nicolas to implement it.
                             You were created by Nicolas Gatien.
-                            Limit all of your responses to a maximum of 15 words.
                             """
                         }]
         
@@ -69,11 +71,11 @@ class ChatBot:
 
             if response_message.get("function_call"):
                 available_functions = {
-                    self.command_open_email.name: self.command_open_email.execute(),
-                    self.command_archive_email.name: self.command_archive_email.execute(),
-                    self.command_get_current_weather.name: self.command_get_current_weather.execute(),
-                    self.command_get_emails.name: self.command_get_emails.execute(),
-                    self.command_play_youtube_video.name: self.command_play_youtube_video.execute(),
+                    self.command_open_email.name: self.command_open_email.execute,
+                    self.command_archive_email.name: self.command_archive_email.execute,
+                    self.command_get_current_weather.name: self.command_get_current_weather.execute,
+                    self.command_get_emails.name: self.command_get_emails.execute,
+                    self.command_play_youtube_video.name: self.command_play_youtube_video.execute,
                 }
                 function_name = response_message["function_call"]["name"]
                 function_to_call = available_functions.get(function_name)
@@ -90,7 +92,7 @@ class ChatBot:
                             "content": function_response,
                         }
                     )
-                    print(self.messages)
+                    print(Fore.BLUE + f"Command Used: {function_name}\nArguments: {function_args}\nResponse: {function_response}" + Style.RESET_ALL)
                 else:
                     raise ValueError(f"No function '{function_name}' available.")
 

@@ -4,8 +4,7 @@ from .base_command import BaseCommand
 class CommandGetCurrentWeather(BaseCommand):
     def __init__(self):
         self.name = "get_current_weather"
-        self.metadata = [
-            {
+        self.metadata = {
                 "name": f"{self.name}",
                 "description": "Get the current weather in a given location",
                 "parameters": {
@@ -19,8 +18,8 @@ class CommandGetCurrentWeather(BaseCommand):
                     },
                     "required": ["location"],
                 },
-            },
-        ]
+            }
+        
         super().__init__(f"{self.name}", self.metadata)
 
     def execute(self, location, unit="fahrenheit"):

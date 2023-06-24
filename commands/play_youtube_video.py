@@ -4,8 +4,7 @@ from .base_command import BaseCommand
 class CommandPlayYoutubeVideo(BaseCommand):
     def __init__(self):
         self.name = "play_youtube_video"
-        self.metadata = [
-            {
+        self.metadata = {
                 "name": f"{self.name}",
                 "description": "Play a YouTube video",
                 "parameters": {
@@ -18,8 +17,8 @@ class CommandPlayYoutubeVideo(BaseCommand):
                     },
                     "required": ["video_name"],
                 },
-            },
-        ]
+            }
+        
         super().__init__(f"{self.name}", self.metadata)
 
     def execute(self, video_name):
