@@ -6,26 +6,26 @@ from datetime import datetime
 import json
 from colorama import init, Fore, Style
 
-from commands.archive_email import CommandArchiveEmail
-from commands.get_current_weather import CommandGetCurrentWeather
-from commands.get_emails import CommandGetEmails
-from commands.open_email import CommandOpenEmail
-from commands.play_youtube_video import CommandPlayYoutubeVideo
-from commands.read_file import CommandReadFile
-from commands.list_files_and_directories import CommandListFilesAndDirectories
-from commands.write_file import CommandWriteFile
+import sys
+sys.path.insert(0, './commands')
 
+import os
+import importlib
+import inspect
 
-command_objs = [
-    CommandOpenEmail(),
-    CommandArchiveEmail(),
-    CommandGetCurrentWeather(),
-    CommandGetEmails(),
-    CommandPlayYoutubeVideo(),
-    CommandReadFile(),
-    CommandListFilesAndDirectories(),
-    CommandWriteFile(),
-]
+def load_command_objects():
+    command_files = [f[:-3] for f in os.listdir('./commands') if f.endswith('.py') and f != '__init__.py' and f != 'base_command.py']
+    command_objs = []
+
+    for file in command_files:
+        if file != "__init__":
+            module = importlib.import_module('commands.' + file)
+            for name, obj in inspect.getmembers(module):
+                if inspect.isclass(obj):
+                    command_objs.append(obj())
+
+    return command_objs
+
 
 init()
 
@@ -52,9 +52,12 @@ def listen():
         except:
             return ""
 
+command_objs = load_command_objects()
 bot = ChatBot("config\\api_keys.json", command_objs)
 
 while True:
+    command_objs = load_command_objects()
+    bot.reload_commands(command_objs)
     user_input = listen()
     now = datetime.now()
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
@@ -65,3 +68,4 @@ while True:
         response = bot.get_response(prompt)
         print(Fore.YELLOW + "Bot: " + response)
         speak(response)
+

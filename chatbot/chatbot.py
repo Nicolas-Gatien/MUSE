@@ -28,6 +28,7 @@ class ChatBot:
                             Your goal is to learn as many skills as you possibly can and to be as helpful as possible.
                             If there is a skill that would be useful for you to know, that you do not currently have access to, ask Nicolas to implement it.
                             You were created by Nicolas Gatien.
+                            You can find your own codebase at: c:/Users/polar/Desktop/MUSE/
                             """
                         }]
         
@@ -72,3 +73,6 @@ class ChatBot:
             else:
                 self.messages.append(response_message)
                 return response_message["content"]
+            
+    def reload_commands(self, command_objs):
+        self.commands = {command_obj.name: command_obj for command_obj in command_objs}

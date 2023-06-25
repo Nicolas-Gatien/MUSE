@@ -1,5 +1,5 @@
 import json
-from .base_command import BaseCommand
+from base_command import BaseCommand
 
 class CommandGetCurrentWeather(BaseCommand):
     def __init__(self):

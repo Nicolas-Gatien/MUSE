@@ -1,7 +1,7 @@
 import os
-from .base_command import BaseCommand
+from commands.base_command import BaseCommand
 
-class CommandListFilesAndDirectories(BaseCommand):
+class CommandOpenFolder(BaseCommand):
     def __init__(self):
         self.name = "list_files_and_directories"
         self.metadata = {
@@ -18,8 +18,8 @@ class CommandListFilesAndDirectories(BaseCommand):
                 "required": ["path"],
             },
         }
-
         super().__init__(self.name, self.metadata)
+
 
     def execute(self, path):
         """Lists all the files and directories in a given path."""

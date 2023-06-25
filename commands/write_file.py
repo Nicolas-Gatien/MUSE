@@ -1,6 +1,7 @@
 import os
+from commands.base_command import BaseCommand
 
-class CommandWriteFile:
+class CommandWriteFile(BaseCommand):
     def __init__(self):
         self.name = "write_file"
         self.metadata = {
@@ -21,6 +22,7 @@ class CommandWriteFile:
                 "required": ["file_name", "content"]
             }
         }
+        super().__init__(f"{self.name}", self.metadata)
     
     def execute(self, file_name, content):
         file_path = os.path.join("commands", file_name)

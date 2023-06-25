@@ -1,7 +1,7 @@
 import os
-from .base_command import BaseCommand
+from commands.base_command import BaseCommand
 
-class CommandReadFile(BaseCommand):
+class CommandOpenFile(BaseCommand):
     def __init__(self):
         self.name = "read_file"
         self.metadata = {
@@ -20,6 +20,8 @@ class CommandReadFile(BaseCommand):
         }
 
         super().__init__(self.name, self.metadata)
+
+
 
     def execute(self, path):
         """Reads and returns the contents of a file."""
