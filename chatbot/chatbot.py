@@ -9,26 +9,16 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from commands.archive_email import CommandArchiveEmail
-from commands.get_current_weather import CommandGetCurrentWeather
-from commands.get_emails import CommandGetEmails
-from commands.open_email import CommandOpenEmail
-from commands.play_youtube_video import CommandPlayYoutubeVideo
-
 from colorama import init, Fore, Style
 
 init()
 
 class ChatBot:
-    def __init__(self, keys_file):
+    def __init__(self, keys_file, command_objs):
         with open(keys_file) as f:
             api_keys = json.load(f)
 
         openai.api_key = api_keys["openai"]
-
-        self.gmail_client_id = api_keys["gmail"]["client_id"]
-        self.gmail_client_secret = api_keys["gmail"]["client_secret"]
-        self.gmail_refresh_token = api_keys["gmail"]["refresh_token"]
 
         self.messages = [{
                             "role": "system",
@@ -41,23 +31,13 @@ class ChatBot:
                             """
                         }]
         
-        self.command_open_email = CommandOpenEmail()
-        self.command_archive_email = CommandArchiveEmail()
-        self.command_get_current_weather = CommandGetCurrentWeather()
-        self.command_get_emails = CommandGetEmails()
-        self.command_play_youtube_video = CommandPlayYoutubeVideo()
+        self.commands = {command_obj.name: command_obj for command_obj in command_objs}
 
     def get_response(self, prompt):
         # Add user's prompt to messages
         self.messages.append({"role": "user", "content": prompt})
 
-        functions = [
-            self.command_open_email.metadata,
-            self.command_archive_email.metadata,
-            self.command_get_current_weather.metadata,
-            self.command_get_emails.metadata,
-            self.command_play_youtube_video.metadata
-        ]
+        functions = [command_obj.metadata for command_obj in self.commands.values()]
 
         while True:
             response = openai.ChatCompletion.create(
@@ -70,19 +50,12 @@ class ChatBot:
             response_message = response["choices"][0]["message"]
 
             if response_message.get("function_call"):
-                available_functions = {
-                    self.command_open_email.name: self.command_open_email.execute,
-                    self.command_archive_email.name: self.command_archive_email.execute,
-                    self.command_get_current_weather.name: self.command_get_current_weather.execute,
-                    self.command_get_emails.name: self.command_get_emails.execute,
-                    self.command_play_youtube_video.name: self.command_play_youtube_video.execute,
-                }
                 function_name = response_message["function_call"]["name"]
-                function_to_call = available_functions.get(function_name)
+                function_to_call = self.commands.get(function_name)
 
                 if function_to_call:
                     function_args = json.loads(response_message["function_call"]["arguments"])
-                    function_response = function_to_call(**function_args)
+                    function_response = function_to_call.execute(**function_args)
                     
                     self.messages.append(response_message)
                     self.messages.append(

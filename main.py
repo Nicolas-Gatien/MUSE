@@ -6,6 +6,20 @@ from datetime import datetime
 import json
 from colorama import init, Fore, Style
 
+from commands.archive_email import CommandArchiveEmail
+from commands.get_current_weather import CommandGetCurrentWeather
+from commands.get_emails import CommandGetEmails
+from commands.open_email import CommandOpenEmail
+from commands.play_youtube_video import CommandPlayYoutubeVideo
+
+command_objs = [
+    CommandOpenEmail(),
+    CommandArchiveEmail(),
+    CommandGetCurrentWeather(),
+    CommandGetEmails(),
+    CommandPlayYoutubeVideo(),
+]
+
 init()
 
 with open("config\\api_keys.json") as f:
@@ -31,7 +45,7 @@ def listen():
         except:
             return ""
 
-bot = ChatBot("config\\api_keys.json")
+bot = ChatBot("config\\api_keys.json", command_objs)
 
 while True:
     user_input = listen()
