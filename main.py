@@ -11,6 +11,10 @@ from commands.get_current_weather import CommandGetCurrentWeather
 from commands.get_emails import CommandGetEmails
 from commands.open_email import CommandOpenEmail
 from commands.play_youtube_video import CommandPlayYoutubeVideo
+from commands.read_file import CommandReadFile
+from commands.list_files_and_directories import CommandListFilesAndDirectories
+from commands.write_file import CommandWriteFile
+
 
 command_objs = [
     CommandOpenEmail(),
@@ -18,6 +22,9 @@ command_objs = [
     CommandGetCurrentWeather(),
     CommandGetEmails(),
     CommandPlayYoutubeVideo(),
+    CommandReadFile(),
+    CommandListFilesAndDirectories(),
+    CommandWriteFile(),
 ]
 
 init()
