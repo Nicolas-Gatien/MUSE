@@ -3,7 +3,7 @@ from commands.base_command import BaseCommand
 
 class CommandOpenFile(BaseCommand):
     def __init__(self):
-        self.name = "read_file"
+        self.name = "open_file"
         self.metadata = {
             "name": self.name,
             "description": "Read and return the contents of a file",

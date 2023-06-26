@@ -20,7 +20,7 @@ class CommandArchiveEmail(BaseCommand):
                 }
             }
         
-        super().__init__(f"{self.name}", self.metadata)
+        super().__init__(self.name, self.metadata)
 
     def execute(self, subject):
         """Archive an email based on its subject."""

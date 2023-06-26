@@ -13,18 +13,24 @@ import os
 import importlib
 import inspect
 
+from commands.base_command import BaseCommand
+
 def load_command_objects():
     command_files = [f[:-3] for f in os.listdir('./commands') if f.endswith('.py') and f != '__init__.py' and f != 'base_command.py']
     command_objs = []
 
     for file in command_files:
         if file != "__init__":
+            #print(f"Importing module: commands.{file}")
             module = importlib.import_module('commands.' + file)
             for name, obj in inspect.getmembers(module):
-                if inspect.isclass(obj):
+                if inspect.isclass(obj) and issubclass(obj, BaseCommand) and obj is not BaseCommand:
+                    #print(f"Instantiating class: {name}")
                     command_objs.append(obj())
 
     return command_objs
+
+
 
 
 init()

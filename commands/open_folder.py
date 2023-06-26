@@ -3,7 +3,7 @@ from commands.base_command import BaseCommand
 
 class CommandOpenFolder(BaseCommand):
     def __init__(self):
-        self.name = "list_files_and_directories"
+        self.name = "open_folder"
         self.metadata = {
             "name": self.name,
             "description": "List all the files and directories in a given path",

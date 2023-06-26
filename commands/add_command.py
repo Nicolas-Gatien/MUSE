@@ -1,9 +1,9 @@
 import os
 from commands.base_command import BaseCommand
 
-class CommandWriteFile(BaseCommand):
+class CommandAddCommand(BaseCommand):
     def __init__(self):
-        self.name = "write_file"
+        self.name = "add_command"
         self.metadata = {
             "name": f"{self.name}",
             "description": "Write content to a file",

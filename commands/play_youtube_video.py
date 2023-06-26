@@ -1,5 +1,5 @@
 import pywhatkit
-from base_command import BaseCommand
+from commands.base_command import BaseCommand
 
 class CommandPlayYoutubeVideo(BaseCommand):
     def __init__(self):
