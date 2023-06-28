@@ -1,19 +1,16 @@
-import speech_recognition as sr
-import pyttsx3
-from chatbot.chatbot import ChatBot
-from datetime import datetime
-
-import json
-from colorama import init, Fore, Style
-
-import sys
-sys.path.insert(0, './commands')
-
-import os
 import importlib
 import inspect
-
+import json
+import os
+import pyttsx3
+import speech_recognition as sr
+import sys
+from chatbot.chatbot import ChatBot
+from colorama import init, Fore, Style
 from commands.base_command import BaseCommand
+from datetime import datetime
+
+sys.path.insert(0, './commands')
 
 def load_command_objects():
     command_files = [f[:-3] for f in os.listdir('./commands') if f.endswith('.py') and f != '__init__.py' and f != 'base_command.py']
