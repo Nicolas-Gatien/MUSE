@@ -1,6 +1,6 @@
+from commands.base_command import BaseCommand
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
-from commands.base_command import BaseCommand
 
 class CommandArchiveEmail(BaseCommand):
     def __init__(self):

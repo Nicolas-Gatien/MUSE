@@ -1,16 +1,13 @@
-import openai
 import json
-
+import openai
+import os
 import pywhatkit
+import sys
+from colorama import init, Fore, Style
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 
-import sys
-import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
-from colorama import init, Fore, Style
-
 init()
 
 class ChatBot:
