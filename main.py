@@ -27,15 +27,7 @@ def load_command_objects():
 
     return command_objs
 
-
-
-
 init()
-
-with open("config\\api_keys.json") as f:
-    keys = json.load(f)
-
-openai_api_key = keys["openai"]
 
 def speak(text):
     """Convert text to speech"""
