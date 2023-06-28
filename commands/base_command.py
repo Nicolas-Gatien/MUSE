@@ -2,7 +2,7 @@ import json
 
 class BaseCommand():
     def __init__(self, name, metadata):
-        with open("config\\api_keys.json") as f:
+        with open("config\\my_api_keys.json") as f:
             self.keys = json.load(f)
             self.name = name
             self.metadata = metadata

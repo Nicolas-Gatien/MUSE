@@ -48,7 +48,7 @@ def listen():
             return ""
 
 command_objs = load_command_objects()
-bot = ChatBot("config\\api_keys.json", command_objs)
+bot = ChatBot("config\\my_api_keys.json", command_objs)
 
 while True:
     command_objs = load_command_objects()
