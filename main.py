@@ -60,7 +60,10 @@ while True:
     if user_input:
         prompt = f"{user_input}"
         print(Fore.WHITE + "User: " + prompt)
-        response = bot.get_response(prompt)
-        print(Fore.YELLOW + "Bot: " + response)
-        speak(response)
+        if user_input == "commit":
+            bot.commit_to_long_term_memory()
+        else:
+            response = bot.get_response(prompt)
+            print(Fore.YELLOW + "Bot: " + response)
+            speak(response)
 

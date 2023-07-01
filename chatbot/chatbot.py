@@ -7,6 +7,7 @@ from colorama import init, Fore, Style
 from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 from memory.memory_module import MemoryModule
+from memory.memory_creator import MemoryCreator
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 init()
@@ -17,8 +18,6 @@ class ChatBot:
             api_keys = json.load(f)
 
         openai.api_key = api_keys["openai"]
-        self.tokens_used = 0
-
         self.messages = [{
                             "role": "system",
                             "content": """
@@ -79,49 +78,59 @@ Limit all of your responses to Nicolas to a maximum of 15 words.
         
         self.commands = {command_obj.name: command_obj for command_obj in command_objs}
         self.long_term_memory = MemoryModule()
+        self.long_term_memory.add_memory("I Am MUSE (Machine-Utilized Synthetic Entity)")
+        self.memory_creator = MemoryCreator(api_keys["openai"], self.long_term_memory)
 
     def get_response(self, prompt):
         # Add user's prompt to messages
-        self.working_memory = self.messages.copy()
-        self.working_memory.append({"role": "system", "content": self.long_term_memory.get_most_relevent_memories(prompt)})
-        self.working_memory.append({"role": "user", "content": prompt})
+        working_memory = self.messages.copy()
+        memory_contents = self.long_term_memory.get_most_relevent_memories(prompt)
+        for memory_content in memory_contents:
+            working_memory.append({"role": "system", "content": memory_content})
+        working_memory.append({"role": "user", "content": prompt})
         self.messages.append({"role": "user", "content": prompt})
         functions = [command_obj.metadata for command_obj in self.commands.values()]
 
         while True:
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo-0613",
-                messages=self.working_memory,
-                functions=functions,
-                function_call="auto",  # auto is default, but we'll be explicit
-            )
+            try:
+                response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo-0613",
+                    messages=working_memory,
+                    functions=functions,
+                    function_call="auto",  # auto is default, but we'll be explicit
+                )
 
-            response_message = response["choices"][0]["message"]
-            self.tokens_used += response['usage']['total_tokens']
+                response_message = response["choices"][0]["message"]
 
-            if response_message.get("function_call"):
-                function_name = response_message["function_call"]["name"]
-                function_to_call = self.commands.get(function_name)
+                if response_message.get("function_call"):
+                    function_name = response_message["function_call"]["name"]
+                    function_to_call = self.commands.get(function_name)
 
-                if function_to_call:
-                    function_args = json.loads(response_message["function_call"]["arguments"])
-                    function_response = function_to_call.execute(**function_args)
-                    
-                    self.messages.append(response_message)
-                    self.messages.append(
-                        {
-                            "role": "function",
-                            "name": function_name,
-                            "content": function_response,
-                        }
-                    )
-                    print(Fore.BLUE + f"Command Used: {function_name}\nArguments: {function_args}\nResponse: {function_response}" + Style.RESET_ALL)
+                    if function_to_call:
+                        function_args = json.loads(response_message["function_call"]["arguments"])
+                        function_response = function_to_call.execute(**function_args)
+                        
+                        self.messages.append(response_message)
+                        self.messages.append(
+                            {
+                                "role": "function",
+                                "name": function_name,
+                                "content": function_response,
+                            }
+                        )
+                        print(Fore.BLUE + f"Command Used: {function_name}\nArguments: {function_args}\nResponse: {function_response}" + Style.RESET_ALL)
+                    else:
+                        raise ValueError(f"No function '{function_name}' available.")
+
                 else:
-                    raise ValueError(f"No function '{function_name}' available.")
+                    self.messages.append(response_message)
+                    return response_message["content"]
+            except openai.error.OpenAIError:
+                self.commit_to_long_term_memory()
+                self.messages = [self.messages[0]]
+    
+    def commit_to_long_term_memory(self):
+        self.memory_creator.get_response(self.messages)
 
-            else:
-                self.messages.append(response_message)
-                return response_message["content"]
-            
     def reload_commands(self, command_objs):
         self.commands = {command_obj.name: command_obj for command_obj in command_objs}
