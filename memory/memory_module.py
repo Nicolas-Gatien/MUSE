@@ -9,7 +9,7 @@ class MemoryModule:
         self.texts = []
         self.embeddings = []
         self.model_id = model_id
-        with open("config\\my_api_keys.json") as f:
+        with open("config\\api_keys.json") as f:
             self.keys = json.load(f)
 
         openai.api_key = self.keys["openai"]
