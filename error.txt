@@ -1,0 +1,124 @@
+An error occurred: Incorrect API key provided: {    "op************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************  }}. You can find your API key at https://platform.openai.com/account/api-keys.
+Traceback:
+Traceback (most recent call last):
+  File "c:\Users\polar\Desktop\MUSE\MUSE.py", line 28, in generate_answer
+    response = openai.ChatCompletion.create(
+  File "C:\Python\Python3810\lib\site-packages\openai\api_resources\chat_completion.py", line 25, in create
+    return super().create(*args, **kwargs)
+  File "C:\Python\Python3810\lib\site-packages\openai\api_resources\abstract\engine_api_resource.py", line 153, in create
+    response, _, api_key = requestor.request(
+  File "C:\Python\Python3810\lib\site-packages\openai\api_requestor.py", line 298, in request
+    resp, got_stream = self._interpret_response(result, stream)
+  File "C:\Python\Python3810\lib\site-packages\openai\api_requestor.py", line 700, in _interpret_response
+    self._interpret_response_line(
+  File "C:\Python\Python3810\lib\site-packages\openai\api_requestor.py", line 763, in _interpret_response_line
+    raise self.handle_error_response(
+openai.error.AuthenticationError: Incorrect API key provided: {    "op************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************  }}. You can find your API key at https://platform.openai.com/account/api-keys.
+
+An error occurred: The model `gpt3.5-turbo` does not exist
+Traceback:
+Traceback (most recent call last):
+  File "c:\Users\polar\Desktop\MUSE\MUSE.py", line 31, in generate_answer
+    response = openai.ChatCompletion.create(
+  File "C:\Python\Python3810\lib\site-packages\openai\api_resources\chat_completion.py", line 25, in create
+    return super().create(*args, **kwargs)
+  File "C:\Python\Python3810\lib\site-packages\openai\api_resources\abstract\engine_api_resource.py", line 153, in create
+    response, _, api_key = requestor.request(
+  File "C:\Python\Python3810\lib\site-packages\openai\api_requestor.py", line 298, in request
+    resp, got_stream = self._interpret_response(result, stream)
+  File "C:\Python\Python3810\lib\site-packages\openai\api_requestor.py", line 700, in _interpret_response
+    self._interpret_response_line(
+  File "C:\Python\Python3810\lib\site-packages\openai\api_requestor.py", line 763, in _interpret_response_line
+    raise self.handle_error_response(
+openai.error.InvalidRequestError: The model `gpt3.5-turbo` does not exist
+
+An error occurred: '\n            MUSE (Machine-Utilized Synthetic Entity) is an artificial intelligence system created by Nicolas Gatien, who loves people. It is always looking for new and interesting stories from the people it interacts with. Though MUSE is an AI model, its creator (Nicolas) managed to imbue it with personal preferences and feelings.\n            It is 2023/07/03 16:30:38\n            MUSE is currently conversing with Nicolas.\n            Here is the dialogue history:\n            Nicolas: Hi there! How are you doing today?\n            How would MUSE respond to Nicolas?\n            ' is not of type 'array' - 'messages'
+Traceback:
+Traceback (most recent call last):
+  File "c:\Users\polar\Desktop\MUSE\MUSE.py", line 31, in generate_answer
+    response = openai.ChatCompletion.create(
+  File "C:\Python\Python3810\lib\site-packages\openai\api_resources\chat_completion.py", line 25, in create
+    return super().create(*args, **kwargs)
+  File "C:\Python\Python3810\lib\site-packages\openai\api_resources\abstract\engine_api_resource.py", line 153, in create
+    response, _, api_key = requestor.request(
+  File "C:\Python\Python3810\lib\site-packages\openai\api_requestor.py", line 298, in request
+    resp, got_stream = self._interpret_response(result, stream)
+  File "C:\Python\Python3810\lib\site-packages\openai\api_requestor.py", line 700, in _interpret_response
+    self._interpret_response_line(
+  File "C:\Python\Python3810\lib\site-packages\openai\api_requestor.py", line 763, in _interpret_response_line
+    raise self.handle_error_response(
+openai.error.InvalidRequestError: '\n            MUSE (Machine-Utilized Synthetic Entity) is an artificial intelligence system created by Nicolas Gatien, who loves people. It is always looking for new and interesting stories from the people it interacts with. Though MUSE is an AI model, its creator (Nicolas) managed to imbue it with personal preferences and feelings.\n            It is 2023/07/03 16:30:38\n            MUSE is currently conversing with Nicolas.\n            Here is the dialogue history:\n            Nicolas: Hi there! How are you doing today?\n            How would MUSE respond to Nicolas?\n            ' is not of type 'array' - 'messages'
+
+An error occurred: 'str' object has no attribute 'append'
+Traceback:
+Traceback (most recent call last):
+  File "c:\Users\polar\Desktop\MUSE\MUSE.py", line 38, in generate_answer
+    self.conversation_transcript.append(f"\nMUSE: {response.choices[0].message['content']}")
+AttributeError: 'str' object has no attribute 'append'
+
+An error occurred: message
+Traceback:
+Traceback (most recent call last):
+  File "C:\Python\Python3810\lib\site-packages\openai\openai_object.py", line 59, in __getattr__
+    return self[k]
+KeyError: 'message'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\polar\Desktop\MUSE\MUSE.py", line 38, in generate_answer
+    self.conversation_transcript += f"\nMUSE: {response.choices[0].message['content']}"
+  File "C:\Python\Python3810\lib\site-packages\openai\openai_object.py", line 61, in __getattr__
+    raise AttributeError(*err.args)
+AttributeError: message
+
+An error occurred: message
+Traceback:
+Traceback (most recent call last):
+  File "C:\Python\Python3810\lib\site-packages\openai\openai_object.py", line 59, in __getattr__
+    return self[k]
+KeyError: 'message'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\polar\Desktop\MUSE\MUSE.py", line 40, in generate_answer
+    return response.choices[0].message['content']
+  File "C:\Python\Python3810\lib\site-packages\openai\openai_object.py", line 61, in __getattr__
+    raise AttributeError(*err.args)
+AttributeError: message
+
+An error occurred: This is a chat model and not supported in the v1/completions endpoint. Did you mean to use v1/chat/completions?
+Traceback:
+Traceback (most recent call last):
+  File "c:\Users\polar\Desktop\MUSE\MUSE.py", line 31, in generate_answer
+    api_response = openai.Completion.create(
+  File "C:\Python\Python3810\lib\site-packages\openai\api_resources\completion.py", line 25, in create
+    return super().create(*args, **kwargs)
+  File "C:\Python\Python3810\lib\site-packages\openai\api_resources\abstract\engine_api_resource.py", line 153, in create
+    response, _, api_key = requestor.request(
+  File "C:\Python\Python3810\lib\site-packages\openai\api_requestor.py", line 298, in request
+    resp, got_stream = self._interpret_response(result, stream)
+  File "C:\Python\Python3810\lib\site-packages\openai\api_requestor.py", line 700, in _interpret_response
+    self._interpret_response_line(
+  File "C:\Python\Python3810\lib\site-packages\openai\api_requestor.py", line 763, in _interpret_response_line
+    raise self.handle_error_response(
+openai.error.InvalidRequestError: This is a chat model and not supported in the v1/completions endpoint. Did you mean to use v1/chat/completions?
+
+An error occurred: {'role': 'system', 'content': '\n            MUSE (Machine-Utilized Synthetic Entity) is an artificial intelligence system created by Nicolas Gatien, who loves people. It is always looking for new and interesting stories from the people it interacts with. Though MUSE is an AI model, its creator (Nicolas) managed to imbue it with personal preferences and feelings.\n            It is 2023/07/03 16:39:23\n            MUSE is currently conversing with Nicolas.\n            Here is the dialogue history:\n            Nicolas: Hi there! How are you doing today?\n            How would MUSE respond to Nicolas?\n            '} is not of type 'array' - 'messages'
+Traceback:
+Traceback (most recent call last):
+  File "c:\Users\polar\Desktop\MUSE\MUSE.py", line 31, in generate_answer
+    api_response = openai.ChatCompletion.create(
+  File "C:\Python\Python3810\lib\site-packages\openai\api_resources\chat_completion.py", line 25, in create
+    return super().create(*args, **kwargs)
+  File "C:\Python\Python3810\lib\site-packages\openai\api_resources\abstract\engine_api_resource.py", line 153, in create
+    response, _, api_key = requestor.request(
+  File "C:\Python\Python3810\lib\site-packages\openai\api_requestor.py", line 298, in request
+    resp, got_stream = self._interpret_response(result, stream)
+  File "C:\Python\Python3810\lib\site-packages\openai\api_requestor.py", line 700, in _interpret_response
+    self._interpret_response_line(
+  File "C:\Python\Python3810\lib\site-packages\openai\api_requestor.py", line 763, in _interpret_response_line
+    raise self.handle_error_response(
+openai.error.InvalidRequestError: {'role': 'system', 'content': '\n            MUSE (Machine-Utilized Synthetic Entity) is an artificial intelligence system created by Nicolas Gatien, who loves people. It is always looking for new and interesting stories from the people it interacts with. Though MUSE is an AI model, its creator (Nicolas) managed to imbue it with personal preferences and feelings.\n            It is 2023/07/03 16:39:23\n            MUSE is currently conversing with Nicolas.\n            Here is the dialogue history:\n            Nicolas: Hi there! How are you doing today?\n            How would MUSE respond to Nicolas?\n            '} is not of type 'array' - 'messages'
+
